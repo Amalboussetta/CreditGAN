@@ -129,8 +129,8 @@ def summarize_performance(step, latent_dim, n_samples=100):
     # save the generator model
     filename2 = 'model_%04d.h5' % (step+1)
     g_model.save(filename2)
-    # X = dataset[:,:-1]
-    # y = dataset[:,-1]
+    X = dataset[:,:-1]
+    y = dataset[:,-1]
     _, acc = c_model.evaluate(X, y, verbose=0)
     print('Classifier Accuracy: %.3f%%' % (acc * 100))
     #save the classifier model
@@ -141,7 +141,7 @@ def summarize_performance(step, latent_dim, n_samples=100):
       
 #)
 #%%
-def train(g_model, d_model, c_model, gan_model, dataset, latent_dim, n_epochs=100, n_batch=64):
+def train(g_model, d_model, c_model, gan_model, dataset, latent_dim, n_epochs=100, n_batch=128):
     X_sup,y_sup = select_supervised_samples(dataset,n_samples)
     # calculate the number of batches per training epoch
     bat_per_epo = int(30000 / n_batch)
