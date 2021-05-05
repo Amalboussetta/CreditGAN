@@ -5,7 +5,7 @@ from sklearn import preprocessing
 import pandas as pd 
 from sklearn.model_selection import train_test_split
 from keras.models import load_model
-from src.data import load_data , load_data2
+from src.data import load_data 
 #%%
 # load the model
 def classifer_accurancy():
@@ -13,7 +13,7 @@ def classifer_accurancy():
       dataset = load_data()
       X,y = dataset[:,:-1],dataset[:,-1]
       trainx,testx,trainy,testy= train_test_split(X,y,test_size=0.2)
-      model = load_model('c_model_17550.h5')
+      model = load_model('c_model_4500.h5')
     
     # evaluate the model
       _, train_acc = model.evaluate(trainx, trainy, verbose=0)
@@ -71,7 +71,7 @@ def load_real_samples(dataset,n_samples):
 #%%
 def generated_data(latent_dim,n_examples,n_class):
       
-    model = load_model('model_6000.h5')
+    model = load_model('model_5850.h5')
     # sneaker
     # generate images
     latent_points = generate_latent_points(latent_dim, n_examples, n_class)

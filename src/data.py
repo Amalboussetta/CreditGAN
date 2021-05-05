@@ -11,10 +11,10 @@ from sklearn.model_selection import train_test_split
 from pandas import read_csv
 from sklearn.preprocessing import PowerTransformer
 from sklearn.metrics import recall_score
-from imblearn.over_sampling import SMOTE
+#from imblearn.over_sampling import SMOTE
 from sklearn.datasets import make_classification
-from imblearn import over_sampling
-from imblearn.over_sampling import RandomOverSampler
+#from imblearn import over_sampling
+#from imblearn.over_sampling import RandomOverSampler
 #import warnings
 #warnings.filterwarnings('ignore')
 
@@ -83,10 +83,16 @@ from imblearn.over_sampling import RandomOverSampler
 
 
 
+# import pickle
+
+# scalar = ....
+
+# with open('scalar_model.pkl', 'wb') as f:
+#     pickle.dump(scalar, f)
 
 
-
-
+# with open('scalar_model.pkl', 'rb') as f:
+#     scalar = pickle.load(f)
 def load_data():
 
 

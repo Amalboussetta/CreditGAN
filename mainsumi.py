@@ -109,7 +109,7 @@ def generate_fake_samples(generator, latent_dim, n_samples):
 
 #%%
 
-def summarize_performance(step, latent_dim, n_samples=100):
+def summarize_performance(step, latent_dim, n_samples=500):
 #         # prepare fake examples
 #     #[X, _], _ = generate_fake_samples(g_model, latent_dim, n_samples)
 #     # scale from [-1,1] to [0,1]
@@ -141,7 +141,7 @@ def summarize_performance(step, latent_dim, n_samples=100):
       
 #)
 #%%
-def train(g_model, d_model, c_model, gan_model, dataset, latent_dim, n_epochs=100, n_batch=128):
+def train(g_model, d_model, c_model, gan_model, dataset, latent_dim, n_epochs=100, n_batch=500):
     X_sup,y_sup = select_supervised_samples(dataset,n_samples)
     # calculate the number of batches per training epoch
     bat_per_epo = int(30000 / n_batch)

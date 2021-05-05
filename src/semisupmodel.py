@@ -31,45 +31,24 @@ opt_g = Adam(lr=0.0001, beta_1=0.5)
 #n_classes= 2 #binary classification
 
 #%%
-#genrator with labels to try if this model works. the other alternative would be normal 
-#generator
-# def generator_network(latent_dim,label_dim,units,n_classes): 
-
-#     labels = Input(shape=(1,))
-#     #li = Embedding(n_classes,1)(labels)
-#     in_lat = Input(shape=(latent_dim,))
-#     x = Dense(units*1)(in_lat) # 1
-#     x = LeakyReLU(alpha=0.1)(x)
-#     x = Dense(units*2)(x)
-#     x = LeakyReLU(alpha=0.1)(x) # 2
-#     x = Dense(units*4)(x)
-#     x = LeakyReLU(alpha=0.1)(x)
-#     x = Dense(data_dim)(x)
-#     x = concatenate([x,labels])
-    
-#     #x = Dense(units*4,activation='relu')(x)
-
-#     g_output = Activation('tanh')(x)
-#     g_model = Model(inputs=[in_lat,labels],outputs=[g_output])
-#     #g_model.compile(optimizer=opt,loss = 'binary_crossentropy')   
-#     return g_model
+#####dropout
 def generator_network(latent_dim,label_dim,units): 
 
     
     in_lat = Input(shape=(latent_dim,))
     x = Dense(units*1)(in_lat)
-    x = BatchNormalization()(x) # 1
+    #x = BatchNormalization()(x) # 1
     x = LeakyReLU(alpha=0.1)(x)
     #
-    #x = Dropout(rate=0.4)(x)
+    x = Dropout(rate=0.4)(x)
     x = Dense(units*2)(x)
-    x = BatchNormalization()(x)
+    #x = BatchNormalization()(x)
     x = LeakyReLU(alpha=0.1)(x)
-    #x = Dropout(rate=0.4)(x) # 2
+    x = Dropout(rate=0.4)(x) # 2
     x = Dense(units*4)(x)
-    x = BatchNormalization()(x)
+    #x = BatchNormalization()(x)
     x = LeakyReLU(alpha=0.1)(x)
-    #x = Dropout(rate=0.4)(x)
+    x = Dropout(rate=0.4)(x)
     x = Dense(data_dim)(x)
     
     
@@ -85,17 +64,17 @@ def generator_network(latent_dim,label_dim,units):
 def discriminator_network(data_dim,units):
     input_d= Input(shape=(data_dim,))  #(data_dim+label_dim,))
     x =Dense(units*4)(input_d)
-    x = BatchNormalization()(x)
+    #x = BatchNormalization()(x)
     x = LeakyReLU(alpha=0.1)(x)
     x = Dense(units*2)(x)
-    x = BatchNormalization()(x)
-    #x = Dropout(rate=0.5)(x)
+    #x = BatchNormalization()(x)
+    x = Dropout(rate=0.5)(x)
     x = LeakyReLU(alpha=0.1)(x)
-   # x = Dropout(rate=0.5)(x)
+    x = Dropout(rate=0.5)(x)
     x = Dense(units*1)(x) 
-    x = BatchNormalization()(x)
+    #x = BatchNormalization()(x)
     x = LeakyReLU(alpha=0.1)(x)
-    #x = Dropout(rate=0.5)(x)
+    x = Dropout(rate=0.5)(x)
      #this dicri model has two outputs one for the supervised and one for unsupervised 
     #classifier
     out2 = Dense(1,activation='sigmoid')(x)
