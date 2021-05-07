@@ -85,6 +85,8 @@ def generated_data(latent_dim,n_examples,n_class):
     with open('../scaler_g_model.pkl', 'rb') as f:
         scaler_g = pickle.load(f)
     X_transf = scaler_g.inverse_transform(df)
+
+    X_transf.to_csv('generated_df.csv')
     plt.hist(pd.DataFrame(X_transf)[0])
     plt.show()
 

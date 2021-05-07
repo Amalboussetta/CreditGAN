@@ -110,7 +110,7 @@ def load_data():
       scaler_g.fit(creditdata_for_scaler)
       with open('model/scaler_g_model.pkl', 'wb') as f:
             pickle.dump(scaler_g, f)
-
+      creditdata_for_scaler.to_csv('real_df.csv')
 
       #df = preprocessing.normalize(creditdata)
       scaler = preprocessing.MinMaxScaler()
