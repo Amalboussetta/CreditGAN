@@ -14,34 +14,15 @@ from sklearn.preprocessing import PowerTransformer
 from sklearn.metrics import recall_score
 #from imblearn.over_sampling import SMOTE
 from sklearn.datasets import make_classification
+import pickle
+
 #from imblearn import over_sampling
 #from imblearn.over_sampling import RandomOverSampler
 #import warnings
 #warnings.filterwarnings('ignore')
 
 #%%
-# def load_data():
-      
-#       scaler = preprocessing.MinMaxScaler()
-#       df1 = pd.read_csv('UCI_Credit_Card.csv', delimiter=',')
-#       df1.dataframeName = 'UCI_Credit_Card.csv'
 
-#       # print(f'There are {nRow} rows and {nCol} columns')
-#       ### shape of the data
-#       creditdata = df1.copy()
-#       #creditdata = creditdata.drop(['ID'],axis =1)
-#       scaler = preprocessing.MinMaxScaler()
-#       names = creditdata.columns
-#       d = scaler.fit_transform(creditdata)
-#       scaled_df = pd.DataFrame(d, columns=names)
-#       #return scaled_df.head()
-#       df = scaled_df.to_numpy()
-#       #df_X = df[:,:24]
-#       #df_y = df [:,-1]
-#       #trainx, trainy,testx,testy = train_test_split(df_X,df_y,test_size=0.2)
-#       # #X = df_X []
-#       return df 
-      #return trainx,trainy,testx,testy
 
 #load_data()
       #creditdata =creditdata.drop(['ID','PAY_2','PAY_3','PAY_4','PAY_5','PAY_6','BILL_AMT1','BILL_AMT2','BILL_AMT3','BILL_AMT4','BILL_AMT5','BILL_AMT6','PAY_AMT1','PAY_AMT2','PAY_AMT3','PAY_AMT4','PAY_AMT5','PAY_AMT6'], axis = 0)
@@ -64,23 +45,7 @@ from sklearn.datasets import make_classification
 
 #%%
 
-# def load_data():
-    
 
-
-      
-      
-#       df1 = pd.read_csv('UCI_Credit_Card.csv', delimiter=',')
-#       df1.dataframeName = 'UCI_Credit_Card.csv'
-#       #nRow, nCol = df1.shape
-#       # print(f'There are {nRow} rows and {nCol} columns')
-#       ### shape of the data
-#       creditdata = df1.copy()
-#       # X_resampled,y_resampled = upsamle(creditdata)
-#       # data = X_resampled,y_resampled
-#       creditdata = creditdata.drop(['ID'],axis =1)
-#       creditdata = preprocessing.normalize(creditdata)
-#       return creditdata #, creditdata.shape
 
 
 
@@ -99,6 +64,7 @@ def load_data():
       # X_resampled,y_resampled = upsamle(creditdata)
       # data = X_resampled,y_resampled
       creditdata = creditdata.drop(['ID'],axis =1)
+
       #creditdata= creditdata['EDUCATION'].drop(axis=1,index = ['5','6'])
       #creditdata =creditdata.drop(['ID','PAY_2','PAY_3','PAY_4','PAY_5','PAY_6','BILL_AMT1','BILL_AMT2','BILL_AMT3','BILL_AMT4','BILL_AMT5','BILL_AMT6','PAY_AMT1','PAY_AMT2','PAY_AMT3','PAY_AMT4','PAY_AMT5','PAY_AMT6'], axis = 1)
       #creditdata =creditdata.drop(['ID','BILL_AMT1','BILL_AMT2','BILL_AMT3','BILL_AMT4','BILL_AMT5','BILL_AMT6'],axis = 1)#'PAY_AMT1','PAY_AMT2','PAY_AMT3','PAY_AMT4','PAY_AMT5','PAY_AMT6'],axis=1)
@@ -114,18 +80,25 @@ def load_data():
 
       #df = preprocessing.normalize(creditdata)
       scaler = preprocessing.MinMaxScaler()
+      # with open('scalar_model.pkl', 'wb') as f:
+
+      # pickle.dump(scalar, f)
       names = creditdata.columns
       d = scaler.fit_transform(creditdata)
 
       scaled_df = pd.DataFrame(d, columns=names)
       #return scaled_df.head()
       df = scaled_df.to_numpy()
+      #df_X = df[:,-1:]
+      #df_y = df[:,-1]
+      #trainx,trainy = train_test_split(df,test_size=0.2)
+      #train_test_split()
       #creditdata.to_numpy()
       #creditdata[creditdata.columns] = PowerTransformer(method='yeo-johnson', standardize=True, copy=True).fit_transform(creditdata[creditdata.columns])
       #newdata = creditdata.drop(['ID','PAY_2','PAY_3','PAY_4','PAY_5','PAY_6','BILL_AMT1','BILL_AMT2','BILL_AMT3','BILL_AMT4','BILL_AMT5','BILL_AMT6','PAY_AMT1','PAY_AMT2','PAY_AMT3','PAY_AMT4','PAY_AMT5','PAY_AMT6'], axis = 1)
-      #df = creditdata.to_numpy()
-      return df #, df.shape
-#       return df
+      df = creditdata.to_numpy()
+      #return train_df,test_df #, trainx.shape,trainy.shape,testx.shape,testy.shape #, 
+      return df.shape
 #       #creditdata.to_numpy()
 #       #creditdata[creditdata.columns] = PowerTransformer(method='yeo-johnson', standardize=True, copy=True).fit_transform(creditdata[creditdata.columns])
 #       #newdata = creditdata.drop(['ID','PAY_2','PAY_3','PAY_4','PAY_5','PAY_6','BILL_AMT1','BILL_AMT2','BILL_AMT3','BILL_AMT4','BILL_AMT5','BILL_AMT6','PAY_AMT1','PAY_AMT2','PAY_AMT3','PAY_AMT4','PAY_AMT5','PAY_AMT6'], axis = 1)
