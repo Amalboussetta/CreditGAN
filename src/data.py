@@ -1,5 +1,6 @@
 #%%
 #from mpl_toolkits.mplot3d import Axes3D
+import pickle
 from sklearn import preprocessing 
 from sklearn.preprocessing import StandardScaler, normalize, MinMaxScaler
 # import matplotlib.pyplot as plt # plotting
@@ -83,21 +84,11 @@ from sklearn.datasets import make_classification
 
 
 
-# import pickle
-
-# scalar = ....
-
-# with open('scalar_model.pkl', 'wb') as f:
-#     pickle.dump(scalar, f)
 
 
-# with open('scalar_model.pkl', 'rb') as f:
-#     scalar = pickle.load(f)
+
+
 def load_data():
-
-
-
-      
       
       df1 = pd.read_csv('UCI_Credit_Card.csv', delimiter=',')
       df1.dataframeName = 'UCI_Credit_Card.csv'
@@ -111,13 +102,21 @@ def load_data():
       #creditdata= creditdata['EDUCATION'].drop(axis=1,index = ['5','6'])
       #creditdata =creditdata.drop(['ID','PAY_2','PAY_3','PAY_4','PAY_5','PAY_6','BILL_AMT1','BILL_AMT2','BILL_AMT3','BILL_AMT4','BILL_AMT5','BILL_AMT6','PAY_AMT1','PAY_AMT2','PAY_AMT3','PAY_AMT4','PAY_AMT5','PAY_AMT6'], axis = 1)
       #creditdata =creditdata.drop(['ID','BILL_AMT1','BILL_AMT2','BILL_AMT3','BILL_AMT4','BILL_AMT5','BILL_AMT6'],axis = 1)#'PAY_AMT1','PAY_AMT2','PAY_AMT3','PAY_AMT4','PAY_AMT5','PAY_AMT6'],axis=1)
-      #creditdata.rename(columns={'default.payment.next.month':'def_pay'}, inplace=True)
+      creditdata.rename(columns={'default.payment.next.month':'def_pay'}, inplace=True)
        #return creditdata, creditdata.shape
       
+      creditdata_for_scaler = creditdata.drop(['def_pay'],axis =1)
+      scaler_g = preprocessing.MinMaxScaler()
+      scaler_g.fit(creditdata_for_scaler)
+      with open('model/scaler_g_model.pkl', 'wb') as f:
+            pickle.dump(scaler_g, f)
+
+
       #df = preprocessing.normalize(creditdata)
       scaler = preprocessing.MinMaxScaler()
       names = creditdata.columns
       d = scaler.fit_transform(creditdata)
+
       scaled_df = pd.DataFrame(d, columns=names)
       #return scaled_df.head()
       df = scaled_df.to_numpy()

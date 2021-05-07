@@ -3,6 +3,7 @@
 # semi-supervised learning
 
 import numpy as np
+import argparse
 import tensorflow as tf
 from sklearn import preprocessing, model_selection
 from sklearn.model_selection import  train_test_split
@@ -13,7 +14,7 @@ from numpy import ones
 from numpy import asarray
 from numpy.random import randn , normal
 from numpy.random import randint 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 tf.get_logger().setLevel('ERROR')
 
 # from matplotlib import pyplot
@@ -176,10 +177,11 @@ def train(g_model, d_model, c_model, gan_model, dataset, latent_dim, n_epochs=10
         print('>%d, c[%.3f,%.0f], d[%.3f,%.3f], g[%.3f]' % (i+1, c_loss, acc*100, d_loss1, d_loss2, g_loss))
 
         #evaluate the model performance every 'epoch'
-        if (i+1) % (bat_per_epo * 25) == 0:
-
-                
+        if (i+1) % (bat_per_epo * 1) == 0:
             summarize_performance(i,g_model,latent_dim)
+
+
+
 
 n_samples = 1000
 latent_dim = 23#24#17
@@ -188,6 +190,7 @@ label_dim = 1
 n_classes = 2
 units = 128
 
+
 d_model,c_model = discriminator_network(data_dim,units)
 # create the generator
 g_model = generator_network(latent_dim,n_classes,units)
@@ -195,11 +198,14 @@ g_model = generator_network(latent_dim,n_classes,units)
 gan_model = gan_model(g_model, d_model)
 # load image data
 dataset = load_data()
-
-
 #dataset.shape[0] = size
 # train model
 train(g_model, d_model,c_model, gan_model, dataset, latent_dim)
+
+
+
+
+
 #summarize_performance(100,g_model='gene')
 #summarize_performance(100,g_model='gene')
 #%%

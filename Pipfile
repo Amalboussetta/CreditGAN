@@ -12,6 +12,7 @@ keras = "*"
 matplotlib = "*"
 ipykernel = "*"
 imblearn = "*"
+argparse = "*"
 
 [dev-packages]
 
