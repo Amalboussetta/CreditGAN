@@ -7,7 +7,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from keras.models import load_model
 from src.data import load_data 
-import matplotlib.pyplot as plt
+import pickle
 #%%
 # load the model
 def classifer_accurancy():
@@ -79,7 +79,8 @@ def generated_data(latent_dim,n_examples,n_class):
     latent_points = generate_latent_points(latent_dim, n_examples, n_class)
     # generate images
     X  = model.predict(latent_points)
-           
+    with open('scalar_model.pkl', 'rb') as f:
+           scalar = pickle.load(f)
     df = pd.DataFrame (data=X,index = None, columns = ["LIMIT_BAL","SEX","EDUCATION","MARRIAGE","AGE","PAY_0","PAY_2","PAY_3","PAY_4","PAY_5","PAY_6","BILL_AMT1","BILL_AMT2","BILL_AMT3","BILL_AMT4","BILL_AMT5","BILL_AMT6","PAY_AMT1","PAY_AMT2","PAY_AMT3","PAY_AMT4","PAY_AMT5","PAY_AMT6"])
     
     with open('../scaler_g_model.pkl', 'rb') as f:
