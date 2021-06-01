@@ -4,11 +4,11 @@ from tensorflow import keras
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Dense , LeakyReLU, Dropout , Input , concatenate, Activation, Embedding,BatchNormalization
 from tensorflow.keras.optimizers import Adam
-from src.data import load_data
+from src.data import load_d
 #import keras.backend as K
 
 #%%
-load_data()
+#load_data()
 # def get_f1(y_true, y_pred): #taken from old keras source code
 #     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
 #     possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
@@ -20,35 +20,37 @@ load_data()
 
 #%%
 #### declaration of some demensions
-units = 128
-latent_dim = 23#24#17#24 # equal to the data dimension
-data_dim = 23#24 #17#11#24 
+units = 256
+a = 0.1
+latent_dim = 100#23#24#17#24 # equal to the data dimension
+data_dim = 6#23#24 #17#11#24 
 label_dim = 1 # class column with o or 1 output
-opt_d = Adam(lr=0.0004, beta_1=0.5)
+opt_d = Adam(lr=0.0001, beta_1=0.5)
 
 opt_c = Adam(lr=0.0001,beta_1=0.5)
-opt_g = Adam(lr=0.0001, beta_1=0.5)
+opt_g = Adam(lr=0.00001, beta_1=0.5)
+#try a higher rate
 #n_classes= 2 #binary classification
 
 #%%
 #####dropout
-def generator_network(latent_dim,label_dim,units): 
+def generator_network(latent_dim,units): 
 
     
     in_lat = Input(shape=(latent_dim,))
     x = Dense(units*1)(in_lat)
     #x = BatchNormalization()(x) # 1
-    x = LeakyReLU(alpha=0.1)(x)
+    x = LeakyReLU(alpha=a)(x)
     #
-    x = Dropout(rate=0.4)(x)
+    #x = Dropout(rate=0.4)(x)
     x = Dense(units*2)(x)
     #x = BatchNormalization()(x)
-    x = LeakyReLU(alpha=0.1)(x)
-    x = Dropout(rate=0.4)(x) # 2
+    x = LeakyReLU(alpha=a)(x)
+    #x = Dropout(rate=0.4)(x) # 2
     x = Dense(units*4)(x)
     #x = BatchNormalization()(x)
-    x = LeakyReLU(alpha=0.1)(x)
-    x = Dropout(rate=0.4)(x)
+    x = LeakyReLU(alpha=a)(x)
+    #x = Dropout(rate=0.4)(x)
     x = Dense(data_dim)(x)
     
     
@@ -65,15 +67,15 @@ def discriminator_network(data_dim,units):
     input_d= Input(shape=(data_dim,))  #(data_dim+label_dim,))
     x =Dense(units*4)(input_d)
     #x = BatchNormalization()(x)
-    x = LeakyReLU(alpha=0.1)(x)
+    x = LeakyReLU(alpha=a)(x)
     x = Dense(units*2)(x)
     #x = BatchNormalization()(x)
-    x = Dropout(rate=0.5)(x)
-    x = LeakyReLU(alpha=0.1)(x)
-    x = Dropout(rate=0.5)(x)
+    #x = Dropout(rate=0.5)(x)
+    x = LeakyReLU(alpha=a)(x)
+    #x = Dropout(rate=0.5)(x)
     x = Dense(units*1)(x) 
     #x = BatchNormalization()(x)
-    x = LeakyReLU(alpha=0.1)(x)
+    x = LeakyReLU(alpha=a)(x)
     x = Dropout(rate=0.5)(x)
      #this dicri model has two outputs one for the supervised and one for unsupervised 
     #classifier

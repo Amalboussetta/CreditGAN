@@ -6,16 +6,18 @@ from sklearn import preprocessing
 import pandas as pd 
 from sklearn.model_selection import train_test_split
 from keras.models import load_model
-from src.data import load_data 
+from src.data import load_d
 import pickle
+
+#from model import scaler_g_model
 #%%
 # load the model
 def classifer_accurancy():
-      
-      dataset = load_data()
+      dataset = load_d()
+      #trainx,testx,trainy,testy = load_d()
       X,y = dataset[:,:-1],dataset[:,-1]
       trainx,testx,trainy,testy= train_test_split(X,y,test_size=0.2)
-      model = load_model('c_model_4500.h5')
+      model = load_model('c_model_11700.h5')
     
     # evaluate the model
       _, train_acc = model.evaluate(trainx, trainy, verbose=0)
@@ -43,57 +45,54 @@ def classifer_accurancy():
 from math import sqrt
 import numpy as np 
 import pandas as pd
-from numpy import asarray
+from numpy import asarray, around
 from numpy.random import randn
 from keras.models import load_model
 import matplotlib.pyplot as plt
  
 #%%
   # generate points in latent space as input for the generator
-def generate_latent_points(latent_dim, n_samples, n_class):
+def generate_latent_points(latent_dim, n_samples):
 	# generate points in the latent space
 	x_input = randn(latent_dim * n_samples)
 	# reshape into a batch of inputs for the network
 	z_input = x_input.reshape(n_samples, latent_dim)
 	# generate labels
 	#labels = asarray([n_class for _ in range(n_samples)])
-	return z_input
-#%%
-def load_real_samples(dataset,n_samples):
-      
-      dataset = load_data()
+	return z_input#,labels
 
-      df_X = dataset[:,:-1]
-      df_y = dataset[:,-1]
-      selected_ix = df_y==1
-      X = df_X[selected_ix]
-      #y = df_y[selected_ix]      
-      # choose random instances
-      return X #,y]
 #%%
-def generated_data(latent_dim,n_examples,n_class):
+def generated_data(latent_dim,n_examples):
       
-    model = load_model('../model_0120.h5')
+    model = load_model('model_5800.h5')
     # sneaker
     # generate images
-    latent_points = generate_latent_points(latent_dim, n_examples, n_class)
+    latent_points = generate_latent_points(latent_dim, n_examples)
     # generate images
     X  = model.predict(latent_points)
-    with open('scalar_model.pkl', 'rb') as f:
-           scalar = pickle.load(f)
-    df = pd.DataFrame (data=X,index = None, columns = ["LIMIT_BAL","SEX","EDUCATION","MARRIAGE","AGE","PAY_0","PAY_2","PAY_3","PAY_4","PAY_5","PAY_6","BILL_AMT1","BILL_AMT2","BILL_AMT3","BILL_AMT4","BILL_AMT5","BILL_AMT6","PAY_AMT1","PAY_AMT2","PAY_AMT3","PAY_AMT4","PAY_AMT5","PAY_AMT6"])
-    
-    with open('../scaler_g_model.pkl', 'rb') as f:
-        scaler_g = pickle.load(f)
-    X_transf = scaler_g.inverse_transform(df)
+    with open('scaler_g_model.pkl', 'rb') as f:
 
-    X_transf.to_csv('generated_df.csv')
-    plt.hist(pd.DataFrame(X_transf)[0])
-    plt.show()
+      scaler_g = pickle.load(f)
+    
+    #df = pd.DataFrame (data=X,index = None, columns = ["LIMIT_BAL","SEX","EDUCATION","MARRIAGE","AGE","PAY_0"])#,"PAY_2","PAY_3","PAY_4","PAY_5","PAY_6","BILL_AMT1","BILL_AMT2","BILL_AMT3","BILL_AMT4","BILL_AMT5","BILL_AMT6","PAY_AMT1","PAY_AMT2","PAY_AMT3","PAY_AMT4","PAY_AMT5","PAY_AMT6"])
+    
+    
+    X_transf = scaler_g.inverse_transform(X)
+    Y= np.around(X_transf)
+    df = pd.DataFrame(data=Y,index = None, columns = ["LIMIT_BAL","SEX","EDUCATION","MARRIAGE","AGE","PAY_0"])
+    df.to_csv('generated_df.csv')
+    return df
+    #X_transf.to_Data
+    #savetxt('generated_df.csv',X_transf)#,delimiter=',',header=["LIMIT_BAL","SEX","EDUCATION","MARRIAGE","AGE","PAY_0"])
+    #X_transf.to_csv('generated_df.csv')
+    #plt.hist(pd.DataFrame(X_transf)[0])
+    #plt.show()
+
+    
 
 
     #df = pd.DataFrame(data=X,index = None,column = ["ID","LIMIT_BAL","SEX","EDUCATION","MARRIAGE","AGE","PAY_0","PAY_2","PAY_3","PAY_4","PAY_5","PAY_6","BILL_AMT1","BILL_AMT2","BILL_AMT3","BILL_AMT4","BILL_AMT5","BILL_AMT6","PAY_AMT1","PAY_AMT2","PAY_AMT3","PAY_AMT4","PAY_AMT5","PAY_AMT6","default.payment.next.month"])
-    return #df.head
+    #return daf.head
 # create and save a plot of generated images
 #def save_plot(examples, n_examples):
 	# plot images
@@ -106,24 +105,24 @@ def generated_data(latent_dim,n_examples,n_class):
 	# 	plt.imshow(examples[i, :, :, 0], cmap='gray_r')
 	# plt.show()
 #%%
-def compare():
+# def compare():
     
-    dataset = load_data()
-    model = load_model('model_6000.h5')
-    latent_dim = 24
-     # must be a square
-    n_class = 1 # default
-    # generate images
-    latent_points, labels = generate_latent_points(latent_dim, n_examples, n_class)
-    # generate images
-    X  = model.predict(latent_points)
+#     dataset = load_data()
+#     model = load_model('model_6000.h5')
+#     latent_dim = 24
+#      # must be a square
+#     n_class = 1 # default
+#     # generate images
+#     latent_points, labels = generate_latent_points(latent_dim, n_examples, n_class)
+#     # generate images
+#     X  = model.predict(latent_points)
 
-    real_data = load_real_samples(dataset,100)
-    plt.scatter(X,real_data)
-    #gen_samples = pd.DataFrame(X,columns= data + labels)
-    #plt.show()
-    return X, real_data 
-# scale from [-1,1] to [0,1]
+#     real_data = load_real_samples(dataset,100)
+#     plt.scatter(X,real_data)
+#     #gen_samples = pd.DataFrame(X,columns= data + labels)
+#     #plt.show()
+#     return X, real_data 
+# # scale from [-1,1] to [0,1]
 #X = (X + 1) / 2.0
 # plot the result
 #save_plot(X, n_examples)
