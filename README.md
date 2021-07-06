@@ -1,5 +1,6 @@
 # GAN-for-credit-default
 File Organization:
+
 CreditGAN.py: The model architecture
 
 Data.py: Data loading, preprocessing, training, testing
@@ -17,10 +18,15 @@ File plots: contains two plots of a good and a bad CreditGAN
 
 Csv Files:
 real_df.csv: real data 
+
 bad generated data.csv: data generated from a mode collapse model
+
 good generated data.csv data generated from a successful model
+
+
 test.csv: testing data 20%
 UCI_credit_card.csv: training data 80%
-Original data.csv: the original dataset (not used in the code, only used the traning and testing seperately)
+
+Original data.csv: the original dataset (not used in the code, only used the training and testing seperately)
 
 To run the code install the virtual environment and run python main.py
