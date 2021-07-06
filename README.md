@@ -17,11 +17,12 @@ File model: contains 2 unsupervised model (a good one and a bad one), supervised
 File plots: contains two plots of a good and a bad CreditGAN
 
 Csv Files:
+
 real_df.csv: real data 
 
 bad generated data.csv: data generated from a mode collapse model
 
-good generated data.csv data generated from a successful model
+good generated data.csv: data generated from a successful model
 
 
 test.csv: testing data 20%
