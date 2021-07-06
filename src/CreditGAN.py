@@ -1,54 +1,51 @@
 #%%
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras import Sequential, Model
+from tensorflow.keras import Model
 from tensorflow.keras.layers import Dense , LeakyReLU, Dropout , Input , concatenate, Activation, Embedding,BatchNormalization
 from tensorflow.keras.optimizers import Adam
-from src.data import load_data
-#import keras.backend as K
-
-#%%
-load_data()
-# def get_f1(y_true, y_pred): #taken from old keras source code
-#     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
-#     possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
-#     predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
-#     precision = true_positives / (predicted_positives + K.epsilon())
-#     recall = true_positives / (possible_positives + K.epsilon())
-#     f1_val = 2*(precision*recall)/(precision+recall+K.epsilon())
-#     return f1_val
-
 #%%
 #### declaration of some demensions
 units = 128
-latent_dim = 23#24#17#24 # equal to the data dimension
-data_dim = 23#24 #17#11#24 
-label_dim = 1 # class column with o or 1 output
-opt_d = Adam(lr=0.0004, beta_1=0.5)
+a = 0.1
+data_dim = 6 #data dimension
+latent_dim = 6
+# good best 
+opt_d = Adam(lr=0.0002, beta_1=0.5)
+opt_c = Adam(lr=0.0002,beta_1=0.5)
+opt_g = Adam(lr=0.00001, beta_1=0.5)
+#trial 1 4600_1 good
+# opt_d = Adam(lr=0.0003, beta_1=0.5)
+# opt_c = Adam(lr=0.0003,beta_1=0.5)
+# opt_g = Adam(lr=0.00001, beta_1=0.5)
+# # 4600 similar and good
+# opt_d = Adam(lr=0.0004, beta_1=0.5)
+# opt_c = Adam(lr=0.0004,beta_1=0.5)
+# opt_g = Adam(lr=0.00001, beta_1=0.5)
 
-opt_c = Adam(lr=0.0001,beta_1=0.5)
-opt_g = Adam(lr=0.0001, beta_1=0.5)
+#try a higher rate
 #n_classes= 2 #binary classification
 
 #%%
-#####dropout
-def generator_network(latent_dim,label_dim,units): 
+''''Generator network'''
+def generator_network(latent_dim,units): 
 
     
     in_lat = Input(shape=(latent_dim,))
     x = Dense(units*1)(in_lat)
+    
     #x = BatchNormalization()(x) # 1
-    x = LeakyReLU(alpha=0.1)(x)
+    x = LeakyReLU(alpha=a)(x)
     #
-    x = Dropout(rate=0.4)(x)
+    #x = Dropout(rate=0.4)(x)
     x = Dense(units*2)(x)
     #x = BatchNormalization()(x)
-    x = LeakyReLU(alpha=0.1)(x)
-    x = Dropout(rate=0.4)(x) # 2
+    x = LeakyReLU(alpha=a)(x)
+    #x = Dropout(rate=0.4)(x) # 2
     x = Dense(units*4)(x)
     #x = BatchNormalization()(x)
-    x = LeakyReLU(alpha=0.1)(x)
-    x = Dropout(rate=0.4)(x)
+    x = LeakyReLU(alpha=a)(x)
+    #x = Dropout(rate=0.4)(x)
     x = Dense(data_dim)(x)
     
     
@@ -61,20 +58,22 @@ def generator_network(latent_dim,label_dim,units):
 
 
 #%%
+'''Discriminator network with two outputs'''
 def discriminator_network(data_dim,units):
     input_d= Input(shape=(data_dim,))  #(data_dim+label_dim,))
     x =Dense(units*4)(input_d)
+    
     #x = BatchNormalization()(x)
-    x = LeakyReLU(alpha=0.1)(x)
+    x = LeakyReLU(alpha=a)(x)
     x = Dense(units*2)(x)
     #x = BatchNormalization()(x)
-    x = Dropout(rate=0.5)(x)
-    x = LeakyReLU(alpha=0.1)(x)
-    x = Dropout(rate=0.5)(x)
+    #x = Dropout(rate=0.5)(x)
+    x = LeakyReLU(alpha=a)(x)
+    #x = Dropout(rate=0.5)(x)
     x = Dense(units*1)(x) 
     #x = BatchNormalization()(x)
-    x = LeakyReLU(alpha=0.1)(x)
-    x = Dropout(rate=0.5)(x)
+    x = LeakyReLU(alpha=a)(x)
+    #x = Dropout(rate=0.5)(x)
      #this dicri model has two outputs one for the supervised and one for unsupervised 
     #classifier
     out2 = Dense(1,activation='sigmoid')(x)
@@ -87,7 +86,8 @@ def discriminator_network(data_dim,units):
     d_model.compile(loss='binary_crossentropy', optimizer=opt_d)
     return d_model, c_model
 	# compile model
-#%%    
+#%%  
+'''CreditGAN'''  
 def gan_model(g_model, d_model):
     for layer in d_model.layers :
         if not isinstance(layer,BatchNormalization):
