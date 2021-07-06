@@ -6,8 +6,7 @@ from h5py._hl.dataset import Dataset
 import numpy as np
 import argparse
 import tensorflow as tf
-from sklearn.model_selection import  train_test_split
-from src.semisupmodel import generator_network, discriminator_network, gan_model
+from src.CreditGAN import generator_network, discriminator_network, gan_model
 from src.data import load_d 
 from numpy import full
 from numpy import asarray
@@ -17,15 +16,6 @@ import matplotlib.pyplot as plt
 tf.get_logger().setLevel('ERROR')
 
 # from matplotlib import pyplot
-#%%
-
-
-# def load_data():
-#     dataset = load_d()
-#     X,y = dataset[:,:-1],dataset[:,-1]
-#     trainx,_,trainy,_= train_test_split(X,y,test_size=0.2)
-#     #print(trainx.shape,trainy.shape)
-#     return trainx,trainy
 
 
 #%%
@@ -34,17 +24,15 @@ kept and will trained by supervised discriminator '''
 def select_supervised_samples(dataset,n_samples,n_classes=2):
         
         X,y = dataset[:,:-1],dataset[:,-1]
-        trainx,_,trainy,_= train_test_split(X,y,test_size=0.2)
-
-        trainx_list , trainy_list = list(), list()
+        X_list , y_list = list(), list()
         n_per_class= int(n_samples/n_classes)
         for i in range(n_classes):
-                X_with_class = trainx[trainy==i]
+                X_with_class = X[y==i]
                 ix = np.random.randint(0,len(X_with_class),n_per_class)
-                [trainx_list.append(X_with_class[j]) for j in ix]
-                [trainy_list.append(i)for j in ix]
+                [X_list.append(X_with_class[j]) for j in ix]
+                [y_list.append(i)for j in ix]
         
-        return asarray(trainx_list), asarray(trainy_list)
+        return asarray(X_list), asarray(y_list)
 #%%
 '''A sample of data and labels is selected. 
 This same function can be used to retrieve examples from the 
@@ -74,8 +62,7 @@ def generate_real_samples(dataset, n_samples):
     y = np.full([n_samples,1],0.9)
     #y = np.full([n_samples,1],0.1)
     return [X, labels ], y
-# 	#print(X.shape)
-# 	#print(labels.shape)
+# 
 
 
 #%%
@@ -130,10 +117,23 @@ def summarize_performance(step, latent_dim, n_samples=500):
 
 def plot_history(d1_hist,d2_hist,g_hist,c_hist,c1_hist):
     plt.subplot(2,1,1)
-    plt.plot(d1_hist,label='dis_real')
+    
     plt.plot(d2_hist,label ='dis_fake')
+    
+    plt.legend()
+
+    plt.subplot(2,1,1)
+    
     plt.plot(g_hist,label ='gen')
     plt.legend()
+
+    plt.subplot(2,1,1)
+    plt.plot(d1_hist,label='dis_real')
+    
+    plt.legend()
+
+    
+    
 
     #plot discriminator accuracy
     plt.subplot(2,1,2)
@@ -141,11 +141,11 @@ def plot_history(d1_hist,d2_hist,g_hist,c_hist,c1_hist):
     plt.plot(c1_hist, label = 'classifier_loss')
     plt.legend()
 
-    plt.savefig('results_convergence/plot_line_plot_loss.png')
+    plt.savefig('plot_line_plot_loss.png')
     plt.close()
 
 #%%
-def train(g_model, d_model, c_model, gan_model, dataset, latent_dim, n_epochs=100, n_batch=2048):
+def train(g_model, d_model, c_model, gan_model, dataset, latent_dim, n_epochs=100, n_batch=512):
     X_sup,y_sup = select_supervised_samples(dataset,n_samples)
     # calculate the number of batches per training epoch
     bat_per_epo = int(dataset.shape[0] / n_batch)
@@ -216,3 +216,5 @@ train(g_model, d_model,c_model, gan_model, dataset, latent_dim)
 
 
 
+
+# %%

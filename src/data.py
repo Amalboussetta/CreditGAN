@@ -14,11 +14,14 @@ from pandas import read_csv
 import seaborn
 
 
-#%%
 
+
+#%%
 def data():
       df1 = pd.read_csv('UCI_Credit_Card.csv', delimiter=',')
       df1.dataframeName = 'UCI_Credit_Card.csv'
+
+      
       
       creditdata = df1.copy()
       
@@ -28,15 +31,7 @@ def data():
       
       creditdata.rename(columns={'default.payment.next.month':'def_pay'}, inplace=True)
       
-      
-      
-      
-      
-      
-      
-      
-      #real_data = creditdata.loc[(creditdata['def_pay']==1)]
-      #real_data.to_csv('real_data.csv')
+
       creditdata.to_csv('real_df.csv')
       return creditdata #, real_data.head()
 
@@ -75,27 +70,25 @@ def load_d():
       df = scaled_df.to_numpy()
       
       return df
-#      
-# %%
-# #creditdata_for_scaler.to_csv('real_df.csv')
+#%%
+'''test data for later'''      
+def data_test():
+      df2 = pd.read_csv('test.csv', delimiter=';')
+      df2.dataframeName = 'test.csv'
+      df2 =df2.drop(['ID','PAY_2','PAY_3','PAY_4','PAY_5','PAY_6','BILL_AMT1','BILL_AMT2','BILL_AMT3','BILL_AMT4','BILL_AMT5','BILL_AMT6','PAY_AMT1','PAY_AMT2','PAY_AMT3','PAY_AMT4','PAY_AMT5','PAY_AMT6'], axis = 1)
+      scaler = preprocessing.MinMaxScaler()
+      # with open('scalar_model.pkl', 'wb') as f:
+
+      # pickle.dump(scalar, f)
+      names = df2.columns
+      d1 = scaler.fit_transform(df2)
+
+      scaled_df2 = pd.DataFrame(d1, columns=names)
+      #return scaled_df.head()
+      df2 = scaled_df2.to_numpy()
       
-#       #df = preprocessing.normalize(creditdata)
-#       scaler = preprocessing.MinMaxScaler()
-#       # with open('scalar_model.pkl', 'wb') as f:
-
-#       # pickle.dump(scalar, f)
-#       names = creditdata.columns
-#       d = scaler.fit_transform(creditdata)
-
-#       scaled_df = pd.DataFrame(d, columns=names)
-#       #return scaled_df.head()
-#       df = scaled_df.to_numpy()
-#       #df_X = df[:,-1:]
-#       #df_y = df[:,-1]
-#       #trainx,trainy = train_test_split(df,test_size=0.2)
-#       #train_test_split()
-#       #creditdata.to_numpy()
-#       #creditdata[creditdata.columns] = PowerTransformer(method='yeo-johnson', standardize=True, copy=True).fit_transform(creditdata[creditdata.columns])
-#       #newdata = creditdata.drop(['ID','PAY_2','PAY_3','PAY_4','PAY_5','PAY_6','BILL_AMT1','BILL_AMT2','BILL_AMT3','BILL_AMT4','BILL_AMT5','BILL_AMT6','PAY_AMT1','PAY_AMT2','PAY_AMT3','PAY_AMT4','PAY_AMT5','PAY_AMT6'], axis = 1)
-#       df = creditdata.to_numpy()
-#       #return train_df,test_df #, trainx.shape,trainy.shape,testx.shape,testy.shape #, 
+      
+      
+      #df3 = pd.DataFrame(df2,index=None, columns=["ID","LIMIT_BAL","SEX","EDUCATION","MARRIAGE","AGE","PAY_0","PAY_2","PAY_3","PAY_4","PAY_5","PAY_6","BILL_AMT1","BILL_AMT2","BILL_AMT3","BILL_AMT4","BILL_AMT5","BILL_AMT6","PAY_AMT1","PAY_AMT2","PAY_AMT3","PAY_AMT4","PAY_AMT5","PAY_AMT6","def_pay"])
+      return df2
+# %%
