@@ -1,6 +1,8 @@
 # GAN-for-credit-default
 File Organization:
 
+main.py: Training of CreditGAN
+
 CreditGAN.py: The model architecture
 
 Data.py: Data loading, preprocessing, training, testing
